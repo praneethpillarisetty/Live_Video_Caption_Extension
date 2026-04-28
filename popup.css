@@ -1,0 +1,85 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  width: 340px;
+  background: #121212;
+  color: #f2f2f2;
+  font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.popup {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+h1 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.status {
+  background: #1e1e1e;
+  border: 1px solid #2f2f2f;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.error {
+  color: #ff8f8f;
+  min-height: 18px;
+  font-size: 12px;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+#clearBtn {
+  grid-column: 1 / -1;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: #2d7ef7;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #333;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+}
+
+select,
+input[type='range'] {
+  width: 100%;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-row span {
+  opacity: 0.75;
+  font-size: 12px;
+}
