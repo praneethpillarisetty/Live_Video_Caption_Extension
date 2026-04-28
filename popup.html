@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Video Captions</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="popup">
+    <h1>Live Video Captions</h1>
+
+    <div id="status" class="status">Status: Idle</div>
+    <div id="error" class="error" aria-live="polite"></div>
+
+    <div class="buttons">
+      <button id="startBtn">Start Captions</button>
+      <button id="stopBtn" class="secondary">Stop Captions</button>
+      <button id="clearBtn" class="secondary">Clear captions</button>
+    </div>
+
+    <label>
+      Language
+      <select id="language"></select>
+    </label>
+
+    <label class="checkbox-row">
+      <input id="autoLanguage" type="checkbox" />
+      Auto language mode <span>(best effort)</span>
+    </label>
+
+    <label>
+      Font size: <span id="fontSizeValue"></span>px
+      <input id="fontSize" type="range" min="12" max="52" step="1" />
+    </label>
+
+    <label>
+      Caption background opacity: <span id="opacityValue"></span>
+      <input id="backgroundOpacity" type="range" min="0" max="1" step="0.05" />
+    </label>
+
+    <label class="checkbox-row">
+      <input id="saveTranscript" type="checkbox" />
+      Save transcript locally (off by default)
+    </label>
+  </main>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

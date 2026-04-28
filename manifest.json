@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Live Video Captions",
+  "description": "Generate live captions for audio/video on the active tab with a draggable overlay.",
+  "version": "1.0.0",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabCapture",
+    "offscreen"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Live Video Captions",
+    "default_popup": "popup.html"
+  }
+}
