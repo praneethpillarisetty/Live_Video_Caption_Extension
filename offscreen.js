@@ -1,5 +1,6 @@
 let recognition;
 let mediaStream;
+let playbackAudio;
 let active = false;
 let restartRequested = false;
 
@@ -65,12 +66,17 @@ async function startRecognition({ streamId, settings, autoLanguageHint }) {
     video: false
   });
 
-  // Keep stream active without recording or persistence.
-  const audioContext = new AudioContext();
-  const source = audioContext.createMediaStreamSource(mediaStream);
-  const gain = audioContext.createGain();
-  gain.gain.value = 0;
-  source.connect(gain).connect(audioContext.destination);
+  // Route captured tab audio back to the user's speakers immediately.
+  playbackAudio = new Audio();
+  playbackAudio.srcObject = mediaStream;
+  try {
+    await playbackAudio.play();
+  } catch (error) {
+    chrome.runtime.sendMessage({
+      type: 'RECOGNITION_ERROR',
+      error: `Unable to play captured tab audio: ${error.message}`
+    });
+  }
 
   recognition = new Recognition();
   recognition.continuous = true;
@@ -126,6 +132,16 @@ async function stopRecognition() {
       track.stop();
     }
     mediaStream = null;
+  }
+
+  if (playbackAudio) {
+    try {
+      playbackAudio.pause();
+    } catch {
+      // Ignore pause errors.
+    }
+    playbackAudio.srcObject = null;
+    playbackAudio = null;
   }
 }
 
