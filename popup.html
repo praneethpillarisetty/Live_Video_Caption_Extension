@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Video Captions</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="popup">
+    <h1>Live Video Captions</h1>
+
+    <div id="status" class="status">Status: Idle</div>
+    <div class="notice">Audio is temporarily processed for live captioning and not stored.</div>
+    <div id="error" class="error" aria-live="polite"></div>
+
+    <div class="buttons">
+      <button id="startBtn">Start Captions</button>
+      <button id="stopBtn" class="secondary">Stop Captions</button>
+      <button id="clearBtn" class="secondary">Clear captions</button>
+    </div>
+
+    <label>
+      STT Provider
+      <select id="sttProvider">
+        <option value="deepgram">Deepgram (Realtime WS)</option>
+      </select>
+    </label>
+
+    <label>
+      STT API Key
+      <input id="sttApiKey" type="password" placeholder="Required for live captions" autocomplete="off" />
+    </label>
+
+    <label>
+      Language
+      <select id="language"></select>
+    </label>
+
+    <label class="checkbox-row">
+      <input id="autoLanguage" type="checkbox" />
+      Auto language mode <span>(best effort by STT service)</span>
+    </label>
+
+    <label>
+      Chunk interval: <span id="chunkMsValue"></span>ms
+      <input id="chunkMs" type="range" min="100" max="500" step="50" />
+    </label>
+
+    <label>
+      Font size: <span id="fontSizeValue"></span>px
+      <input id="fontSize" type="range" min="12" max="52" step="1" />
+    </label>
+
+    <label>
+      Caption background opacity: <span id="opacityValue"></span>
+      <input id="backgroundOpacity" type="range" min="0" max="1" step="0.05" />
+    </label>
+
+    <label class="checkbox-row">
+      <input id="showHistory" type="checkbox" />
+      Show caption history in overlay
+    </label>
+
+    <label class="checkbox-row">
+      <input id="saveTranscript" type="checkbox" />
+      Save transcript locally (off by default)
+    </label>
+
+    <label class="checkbox-row">
+      <input id="autoRestart" type="checkbox" />
+      Auto-restart captions if stream drops
+    </label>
+  </main>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
