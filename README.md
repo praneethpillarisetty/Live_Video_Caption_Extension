@@ -1,30 +1,27 @@
-# Live Video Captions (Manifest V3)
+# Live Video Captions (Chrome Extension, Manifest V3)
 
-Live Video Captions provides low-latency captions from the **currently active tab audio** (YouTube, webinars, courses, etc.) using a streaming STT architecture.
+Live Video Captions is a privacy-first Chrome extension that provides live speech captions for media playing in the **currently active tab** (e.g., YouTube, webinars, online courses, and other browser video/audio pages).
 
-## Architecture
+## Features
 
-- `chrome.tabCapture` gets active-tab audio stream ID after explicit user click.
-- MV3 `offscreen.html` + `offscreen.js` capture and chunk audio with `MediaRecorder`.
-- Audio chunks stream over WebSocket to STT provider (Deepgram realtime WS).
-- Interim/final transcripts are relayed to `content.js` overlay instantly.
+- **Manual start/stop** caption capture from popup UI.
+- Uses `chrome.tabCapture` for active-tab audio only.
+- Runs caption processing in an **MV3 offscreen document**.
+- Uses `SpeechRecognition` / `webkitSpeechRecognition` with:
+  - `continuous = true`
+  - `interimResults = true`
+- Shows live, interim captions in a **floating page overlay**.
+- Overlay is **draggable**, **resizable**, and readable.
+- Optional local transcript saving (disabled by default).
+- Local-only settings in `chrome.storage.local`.
 
-## Key Behaviors
-
-- User-triggered start/stop only.
-- Active-tab-only capture.
-- 100–500ms audio chunking (configurable slider).
-- Persistent WebSocket streaming for low latency.
-- Optional auto-restart when stream drops.
-- Optional local transcript saving (default OFF).
-
-## Files
+## Project Structure
 
 - `manifest.json`
-- `background.js`
+- `background.js` (MV3 service worker)
 - `offscreen.html`
 - `offscreen.js`
-- `content.js`
+- `content.js` (overlay)
 - `popup.html`
 - `popup.js`
 - `popup.css`
@@ -32,34 +29,51 @@ Live Video Captions provides low-latency captions from the **currently active ta
 - `privacy.md`
 - `TESTING.md`
 
-## Permissions
+## Permissions Used
 
-Uses only:
+- `storage`: persist local settings and optional local transcript.
+- `activeTab`: operate only on user-activated tab.
+- `scripting`: inject overlay UI into active tab.
+- `tabCapture`: capture active-tab audio after user click.
+- `offscreen`: run media/speech processing in offscreen document.
 
-- `storage`
-- `activeTab`
-- `scripting`
-- `tabCapture`
-- `offscreen`
+## Host Permissions
 
 No persistent `host_permissions` are requested.
 
-## Setup
+The extension injects `content.js` only into the currently active tab after user interaction, using `activeTab + scripting`, which avoids broad permanent site access.
+
+## Install (Developer Mode)
 
 1. Open `chrome://extensions`.
-2. Enable Developer Mode.
-3. Load unpacked this folder.
-4. Open extension popup and set STT API key.
-5. Open a media tab and click **Start Captions**.
+2. Enable **Developer mode**.
+3. Click **Load unpacked**.
+4. Select this project folder.
 
-## Language
+## Usage
 
-Manual language options include:
+1. Open a page with audio/video.
+2. Open extension popup.
+3. Click **Start Captions**.
+4. Adjust language/settings if needed.
+5. Click **Stop Captions** anytime.
 
-`en-US, es-ES, fr-FR, de-DE, hi-IN, te-IN, ta-IN, zh-CN, ja-JP, ko-KR, ar-SA`
+## Language Handling
 
-Auto mode passes best-effort hints (`document.documentElement.lang`, then `navigator.language`) and enables provider-side detection.
+Available language options:
 
-## Disclosure
+- `en-US`, `es-ES`, `fr-FR`, `de-DE`, `hi-IN`, `te-IN`, `ta-IN`, `zh-CN`, `ja-JP`, `ko-KR`, `ar-SA`
 
-The popup and overlay include: **“Audio is temporarily processed for live captioning and not stored.”**
+When **Auto language mode** is enabled, language is selected in this order:
+
+1. `document.documentElement.lang` (from active page)
+2. `navigator.language`
+3. Fallback to `en-US`
+
+Auto detection is best effort.
+
+## Notes / Limitations
+
+- Speech recognition availability can vary by browser build and platform.
+- Some protected media pages and browser-internal pages may block capture.
+- Automatic restarts occur only while captions remain enabled.

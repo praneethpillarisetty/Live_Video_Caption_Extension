@@ -11,7 +11,6 @@
     <h1>Live Video Captions</h1>
 
     <div id="status" class="status">Status: Idle</div>
-    <div class="notice">Audio is temporarily processed for live captioning and not stored.</div>
     <div id="error" class="error" aria-live="polite"></div>
 
     <div class="buttons">
@@ -21,30 +20,13 @@
     </div>
 
     <label>
-      STT Provider
-      <select id="sttProvider">
-        <option value="deepgram">Deepgram (Realtime WS)</option>
-      </select>
-    </label>
-
-    <label>
-      STT API Key
-      <input id="sttApiKey" type="password" placeholder="Required for live captions" autocomplete="off" />
-    </label>
-
-    <label>
       Language
       <select id="language"></select>
     </label>
 
     <label class="checkbox-row">
       <input id="autoLanguage" type="checkbox" />
-      Auto language mode <span>(best effort by STT service)</span>
-    </label>
-
-    <label>
-      Chunk interval: <span id="chunkMsValue"></span>ms
-      <input id="chunkMs" type="range" min="100" max="500" step="50" />
+      Auto language mode <span>(best effort)</span>
     </label>
 
     <label>
@@ -58,18 +40,8 @@
     </label>
 
     <label class="checkbox-row">
-      <input id="showHistory" type="checkbox" />
-      Show caption history in overlay
-    </label>
-
-    <label class="checkbox-row">
       <input id="saveTranscript" type="checkbox" />
       Save transcript locally (off by default)
-    </label>
-
-    <label class="checkbox-row">
-      <input id="autoRestart" type="checkbox" />
-      Auto-restart captions if stream drops
     </label>
   </main>
 
