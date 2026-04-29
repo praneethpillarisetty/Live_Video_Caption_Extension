@@ -121,9 +121,33 @@ async function startCaptions() {
 
   let streamId;
   try {
-    streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
+    streamId = await new Promise((resolve, reject) => {
+      chrome.tabCapture.getMediaStreamId({ targetTabId: tabId }, (id) => {
+        const captureError = chrome.runtime.lastError;
+        if (captureError) {
+          reject(new Error(captureError.message || 'Unknown tab capture error.'));
+          return;
+        }
+        resolve(id);
+      });
+    });
   } catch (error) {
-    throw new Error(`Unable to capture tab audio. Please start captions from a user click and try again. (${error.message || 'Not Allowed'})`);
+    const rawMessage = error?.message || 'Unknown tab capture error.';
+    console.error(rawMessage);
+
+    if (rawMessage.includes('Extension has not been invoked for the current page')) {
+      throw new Error('Please click the extension icon while the video tab is active, then start captions.');
+    }
+
+    if (rawMessage.includes('Chrome pages cannot be captured')) {
+      throw new Error('This page cannot be captured by Chrome.');
+    }
+
+    if (rawMessage.includes('Not allowed')) {
+      throw new Error('Chrome blocked tab audio capture for this page. Try refreshing the video tab, start playback first, then click the extension icon again.');
+    }
+
+    throw new Error(rawMessage);
   }
 
   await ensureOffscreenDocument();
