@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === 'START_CAPTIONS') {
-    startCaptions(message.tabId)
+    startCaptions()
       .then(() => sendResponse({ ok: true }))
       .catch((error) => sendResponse({ ok: false, error: error.message }));
     return true;
@@ -103,24 +103,31 @@ async function injectOverlay(tabId) {
   });
 }
 
-async function startCaptions(tabId) {
-  if (!tabId) {
+async function getActiveTab() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.id) {
     throw new Error('No active tab found to start captions.');
   }
+  return tab;
+}
+
+async function startCaptions() {
+  const tab = await getActiveTab();
+  const tabId = tab.id;
 
   if (state.running) {
     await stopCaptions();
   }
 
-  await ensureOffscreenDocument();
-  await injectOverlay(tabId);
-
   let streamId;
   try {
     streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tabId });
   } catch (error) {
-    throw new Error('Tab audio capture is not available on this page or was blocked by the browser.');
+    throw new Error(`Unable to capture tab audio. Please start captions from a user click and try again. (${error.message || 'Not Allowed'})`);
   }
+
+  await ensureOffscreenDocument();
+  await injectOverlay(tabId);
 
   const settings = await getSettings();
   const autoLanguageHint = await chrome.scripting.executeScript({
