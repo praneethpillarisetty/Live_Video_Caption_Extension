@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Live Video Captions",
-  "description": "Low-latency live captions for audio/video on the active tab.",
-  "version": "1.1.0",
+  "description": "Generate live captions for audio/video on the active tab with a draggable overlay.",
+  "version": "1.0.0",
   "permissions": [
     "storage",
     "activeTab",
@@ -17,8 +17,5 @@
   "action": {
     "default_title": "Live Video Captions",
     "default_popup": "popup.html"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' wss://api.deepgram.com wss://streaming.assemblyai.com"
   }
 }

@@ -1,46 +1,62 @@
 # Testing Guide - Live Video Captions
 
-## Quick checks
+## Manual test matrix
 
-1. Load extension unpacked in `chrome://extensions`.
-2. Set a valid STT API key in popup.
-3. Open YouTube (or any tab with audio).
-4. Start captions and confirm interim text appears while speaking.
-5. Stop captions and verify stream halts.
+### 1) Basic Start/Stop
+1. Load extension unpacked.
+2. Open a video page (e.g., YouTube).
+3. Click extension icon → **Start Captions**.
+4. Verify overlay appears and status shows running.
+5. Click **Stop Captions**.
+6. Verify status returns to idle and updates stop.
 
-## Functional matrix
+Expected: No capture starts without explicit click.
 
-### Start/Stop
-- Start from popup only.
-- Confirm overlay status changes ON/OFF.
+### 2) Interim captions
+1. Start captions on a page with speech.
+2. Watch overlay while sentence is still being spoken.
 
-### Active-tab capture
-- Switch tabs and restart on the new active tab.
-- Confirm captions represent only the chosen active tab.
+Expected: Interim text appears before final sentence completion.
 
-### Real-time streaming
-- Set chunk interval 100ms and verify lower latency.
-- Set chunk interval 500ms and verify fewer updates.
+### 3) Overlay behavior
+1. Drag the overlay by its header.
+2. Resize overlay via corner handle.
+3. Change font size and background opacity in popup.
 
-### Overlay behavior
-- Drag overlay away from controls.
-- Resize overlay.
-- Change font size and background opacity.
-- Toggle show-history and validate behavior.
+Expected: overlay moves/resizes; style updates live.
 
-### Error handling
-- Remove API key and start: should show clear configuration error.
-- Try `chrome://` page start: should show tabCapture error.
-- Simulate connection loss: verify auto-restart if enabled.
+### 4) Language selection
+1. Set language manually (e.g., `es-ES`).
+2. Start captions with Spanish audio.
+3. Enable auto mode and repeat.
 
-### Privacy controls
-- Keep save transcript OFF and verify transcript remains empty.
-- Enable save transcript and verify final captions persist locally.
+Expected: manual selection respected; auto mode best-effort from page/browser language.
 
-## Static validation commands
+### 5) Save transcript toggle
+1. Ensure “Save transcript locally” is OFF.
+2. Start captions and speak.
+3. Inspect `chrome.storage.local` -> `transcript` should remain unchanged/empty.
+4. Turn setting ON and repeat.
 
-- `python -m json.tool manifest.json`
-- `node --check background.js`
-- `node --check offscreen.js`
-- `node --check content.js`
-- `node --check popup.js`
+Expected: transcript is stored only when toggle is ON.
+
+### 6) Unsupported / blocked scenarios
+1. Open a Chrome internal page (`chrome://extensions`).
+2. Try starting captions.
+
+Expected: clear error that tab capture is unavailable or blocked.
+
+### 7) Unexpected recognition stop
+1. Start captions.
+2. Simulate quiet periods / recognition pauses.
+
+Expected: recognition attempts restart only while running is true.
+
+## Compliance checklist
+
+- [x] Manifest V3
+- [x] Explicit user action required to start capture
+- [x] Visible capture state in popup and overlay
+- [x] No backend services
+- [x] Local-only storage
+- [x] Privacy policy included (`privacy.md`)

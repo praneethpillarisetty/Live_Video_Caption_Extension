@@ -2,37 +2,41 @@
 
 ## Summary
 
-Live Video Captions processes active-tab audio in real time for live captions and is designed to minimize data retention.
+Live Video Captions is designed for on-device, local operation. It does **not** use any backend service and does not track users.
 
-## Data handling
+## What the extension does
 
-- Audio is captured from the **active tab only** after user clicks **Start Captions**.
-- Audio is chunked in memory and streamed temporarily to the configured STT provider for transcription.
-- Raw audio is **not** stored by this extension.
-- Captions/transcript are stored only if user explicitly enables local saving.
+- Captures audio from the **currently active tab** only after the user clicks **Start Captions**.
+- Converts speech to text in-browser using built-in speech recognition APIs.
+- Displays captions in an on-page overlay.
 
-## What is not included
+## What the extension does NOT do
 
-- No analytics
-- No ads
-- No tracking
-- No remote code loading
-- No custom backend server
+- Does **not** record audio files.
+- Does **not** upload or transmit audio to a custom backend.
+- Does **not** save audio.
+- Does **not** save captions/transcripts unless the user explicitly enables “Save transcript locally”.
+- Does **not** include analytics, ads, remote code loading, or tracking scripts.
 
-## Local storage
+## Data storage
 
-`chrome.storage.local` stores:
+- Settings are stored locally with `chrome.storage.local`.
+- Transcript storage is optional and disabled by default.
+- If enabled, transcript is stored only in `chrome.storage.local` on the user’s device.
 
-- UI/settings preferences
-- Optional transcript (only when enabled)
+## Permissions justification
 
-## User controls
+- `tabCapture`: capture active-tab audio when user starts captions.
+- `offscreen`: run audio/speech processing in an offscreen document.
+- `scripting` + `activeTab`: inject caption overlay only into the current user-selected tab.
+- `storage`: save local preferences and optional transcript.
 
-- Start/Stop captions at any time.
-- Clear captions at any time.
-- Disable transcript saving at any time.
-- Disable auto-restart at any time.
+## User control
 
-## Disclosure
+- User starts and stops captioning manually.
+- User can clear captions from UI.
+- User can disable local transcript saving at any time.
 
-The UI displays: **“Audio is temporarily processed for live captioning and not stored.”**
+## Contact
+
+If you distribute this extension, update this policy with your support email/contact method.
