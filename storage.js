@@ -3,12 +3,7 @@ export const DEFAULT_SETTINGS = {
   autoLanguage: true,
   fontSize: 24,
   backgroundOpacity: 0.65,
-  saveTranscript: false,
-  showHistory: true,
-  autoRestart: true,
-  chunkMs: 250,
-  sttProvider: 'deepgram',
-  sttApiKey: ''
+  saveTranscript: false
 };
 
 export async function getSettings() {
